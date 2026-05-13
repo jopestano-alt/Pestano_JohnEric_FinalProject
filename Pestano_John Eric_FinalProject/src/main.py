@@ -1,104 +1,251 @@
 """
-Main module
-CLI interface for Library Manager System
+Library Manager System
+A CLI-based application for managing books and borrowing transactions.
+
+Author: Your Name
 """
 
-from library import Library
+import json
+import os
 
 
-def show_books(books):
-    """Displays books in readable format."""
-    if not books:
-        print("\n📭 No books found.\n")
-        return
+class Book:
+    """
+    Represents a single book object.
+    """
 
-    print("\n📚 --- BOOK LIST ---")
-    for book in books:
-        print(book)
-    print()
+    def __init__(self, book_id, title, author, available=True):
+        self.book_id = book_id
+        self.title = title
+        self.author = author
+        self.available = available
+
+    def to_dict(self):
+        """
+        Converts object to dictionary.
+        """
+        return {
+            "book_id": self.book_id,
+            "title": self.title,
+            "author": self.author,
+            "available": self.available
+        }
+
+    def __str__(self):
+        status = "Available" if self.available else "Borrowed"
+        return f"{self.book_id:<5} | {self.title:<30} | {self.author:<20} | {status}"
+
+
+class Library:
+    """
+    Handles all library operations.
+    """
+
+    def __init__(self):
+        self.books = []
+        self.file_name = "books.json"
+        self.load_books()
+
+    def load_books(self):
+        """
+        Loads books from JSON file.
+        """
+
+        if not os.path.exists(self.file_name):
+            return
+
+        with open(self.file_name, "r", encoding="utf-8") as file:
+            data = json.load(file)
+
+            for item in data:
+                self.books.append(
+                    Book(
+                        item["book_id"],
+                        item["title"],
+                        item["author"],
+                        item["available"]
+                    )
+                )
+
+    def save_books(self):
+        """
+        Saves books to JSON file.
+        """
+
+        data = [book.to_dict() for book in self.books]
+
+        with open(self.file_name, "w", encoding="utf-8") as file:
+            json.dump(data, file, indent=4)
+
+    def add_book(self):
+        """
+        Adds a new book.
+        """
+
+        try:
+            book_id = len(self.books) + 1
+
+            title = input("Enter book title: ")
+            author = input("Enter author name: ")
+
+            self.books.append(Book(book_id, title, author))
+
+            print("\nBook added successfully!\n")
+
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def view_books(self):
+        """
+        Displays all books.
+        """
+
+        if not self.books:
+            print("\nNo books available.\n")
+            return
+
+        print("\n========================================================================")
+        print("ID    | Title                          | Author               | Status")
+        print("------------------------------------------------------------------------")
+
+        for book in self.books:
+            print(book)
+
+        print("========================================================================\n")
+
+    def search_book(self):
+        """
+        Searches books by title.
+        """
+
+        keyword = input("Enter title keyword: ").lower()
+
+        results = [
+            book for book in self.books
+            if keyword in book.title.lower()
+        ]
+
+        if results:
+            print("\nSearch Results:\n")
+
+            for book in results:
+                print(book)
+
+            print()
+
+        else:
+            print("\nNo matching books found.\n")
+
+    def borrow_book(self):
+        """
+        Borrows a book.
+        """
+
+        try:
+            book_id = int(input("Enter Book ID to borrow: "))
+
+            for book in self.books:
+
+                if book.book_id == book_id:
+
+                    if book.available:
+                        book.available = False
+                        print("\nBook borrowed successfully!\n")
+
+                    else:
+                        print("\nBook is already borrowed.\n")
+
+                    return
+
+            print("\nBook not found.\n")
+
+        except ValueError:
+            print("\nInvalid input. Please enter a number.\n")
+
+    def return_book(self):
+        """
+        Returns a borrowed book.
+        """
+
+        try:
+            book_id = int(input("Enter Book ID to return: "))
+
+            for book in self.books:
+
+                if book.book_id == book_id:
+
+                    if not book.available:
+                        book.available = True
+                        print("\nBook returned successfully!\n")
+
+                    else:
+                        print("\nBook was not borrowed.\n")
+
+                    return
+
+            print("\nBook not found.\n")
+
+        except ValueError:
+            print("\nInvalid input. Please enter a number.\n")
+
+
+def display_menu():
+    """
+    Displays the main menu.
+    """
+
+    print("==========================================")
+    print("        LIBRARY MANAGER SYSTEM")
+    print("==========================================")
+    print("1. View All Books")
+    print("2. Add Book")
+    print("3. Search Book")
+    print("4. Borrow Book")
+    print("5. Return Book")
+    print("6. Save Data")
+    print("7. Exit")
+    print("==========================================")
 
 
 def main():
-    lib = Library()
+    """
+    Main application function.
+    """
+
+    library = Library()
 
     while True:
-        print("\n===== 📚 LIBRARY MENU =====")
-        print("1. View Books")
-        print("2. Add Book")
-        print("3. Search Book")
-        print("4. Borrow Book")
-        print("5. Return Book")
-        print("6. Sort Books")
-        print("0. Exit")
 
-        choice = input("Enter choice: ").strip()
+        display_menu()
 
-        # ---------------- VIEW ----------------
+        choice = input("Enter your choice: ")
+
         if choice == "1":
-            show_books(lib.view_books())
+            library.view_books()
 
-        # ---------------- ADD ----------------
         elif choice == "2":
-            book_id = input("Enter Book ID: ").strip()
-            title = input("Enter Title: ").strip()
-            author = input("Enter Author: ").strip()
+            library.add_book()
 
-            # validation (IMPORTANT for rubric)
-            if not book_id or not title or not author:
-                print("❌ All fields are required!")
-                continue
-
-            print(lib.add_book(book_id, title, author))
-
-        # ---------------- SEARCH ----------------
         elif choice == "3":
-            keyword = input("Enter keyword: ").strip()
+            library.search_book()
 
-            if not keyword:
-                print("❌ Keyword cannot be empty!")
-                continue
-
-            results = lib.search_books(keyword)
-            show_books(results)
-
-        # ---------------- BORROW ----------------
         elif choice == "4":
-            book_id = input("Enter Book ID: ").strip()
+            library.borrow_book()
 
-            if not book_id:
-                print("❌ Book ID cannot be empty!")
-                continue
-
-            print(lib.borrow_book(book_id))
-
-        # ---------------- RETURN ----------------
         elif choice == "5":
-            book_id = input("Enter Book ID: ").strip()
+            library.return_book()
 
-            if not book_id:
-                print("❌ Book ID cannot be empty!")
-                continue
-
-            print(lib.return_book(book_id))
-
-        # ---------------- SORT ----------------
         elif choice == "6":
-            mode = input("Sort by (title/author): ").strip().lower()
+            library.save_books()
+            print("\nData saved successfully!\n")
 
-            if mode not in ["title", "author"]:
-                print("❌ Invalid option! Choose 'title' or 'author'.")
-                continue
-
-            show_books(lib.sort_books(mode))
-
-        # ---------------- EXIT ----------------
-        elif choice == "0":
-            print("👋 Goodbye!")
+        elif choice == "7":
+            library.save_books()
+            print("\nThank you for using Library Manager System!")
             break
 
-        # ---------------- INVALID ----------------
         else:
-            print("❌ Invalid choice! Please enter 0–6 only.")
+            print("\nInvalid choice. Please try again.\n")
 
 
 if __name__ == "__main__":
