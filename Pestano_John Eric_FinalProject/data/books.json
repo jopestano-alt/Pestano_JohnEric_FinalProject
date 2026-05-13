@@ -1,14 +1,32 @@
 [
     {
-        "book_id": "1",
+        "book_id": 1,
         "title": "Python Basics",
-        "author": "John Doe",
+        "author": "John Smith",
         "available": true
     },
     {
-        "book_id": "2",
-        "title": "Data Structures and Algorithms",
-        "author": "Jane Smith",
-        "available": false
+        "book_id": 2,
+        "title": "Data Structures",
+        "author": "Maria Clara",
+        "available": true
+    },
+    {
+        "book_id": 3,
+        "title": "Object Oriented Programming",
+        "author": "James Reid",
+        "available": true
+    },
+    {
+        "book_id": 4,
+        "title": "Database Management",
+        "author": "Lisa Garcia",
+        "available": true
+    },
+    {
+        "book_id": 5,
+        "title": "Web Development",
+        "author": "Michael Cruz",
+        "available": true
     }
 ]
