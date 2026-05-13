@@ -1,0 +1,12 @@
+
+---
+
+#  3. requirements.txt
+
+```txt
+# Library Manager System
+# No external libraries required
+
+# Uses only Python standard library:
+# - json
+# - os

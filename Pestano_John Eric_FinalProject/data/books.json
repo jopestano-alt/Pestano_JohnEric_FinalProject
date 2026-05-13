@@ -1,0 +1,14 @@
+[
+    {
+        "book_id": "1",
+        "title": "Python Basics",
+        "author": "John Doe",
+        "available": true
+    },
+    {
+        "book_id": "2",
+        "title": "Data Structures and Algorithms",
+        "author": "Jane Smith",
+        "available": false
+    }
+]
