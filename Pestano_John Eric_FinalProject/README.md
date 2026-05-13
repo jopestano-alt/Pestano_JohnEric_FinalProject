@@ -1,47 +1,34 @@
-# 📚 Library Manager System
+Library Manager System
 
-## 📖 Project Description
-The Library Manager System is a CLI-based Python application that allows users to manage books efficiently. It supports adding, viewing, searching, borrowing, returning, and sorting books with persistent data storage using JSON.
+A CLI-based Python application for managing books and borrowing transactions.
 
----
+ Features
 
-## ✨ Features
 - View all books
-- Add new books
-- Search books by title or author
+- Add books
+- Search books
 - Borrow books
 - Return books
-- Sort books (title/author)
-- Persistent JSON storage
+- Save data using JSON
+- Persistent storage
 
 ---
 
-## 🛠 Technologies Used
-- Python
-- Object-Oriented Programming (OOP)
+ Technologies Used
+
+- Python 3
 - JSON File Handling
-- CLI (Command Line Interface)
+- Object-Oriented Programming (OOP)
 
 ---
 
-## 📁 Project Structure
-
-Library_Manager_System/
-│
-├── src/
-│   ├── main.py
-│   ├── library.py
-│   └── book.py
-│
-├── data/
-│   └── books.json
-│
-├── README.md
-└── requirements.txt
-
----
-
-## 🚀 How to Run
+ Project Structure
 
 ```bash
-python src/main.py
+LibraryManager/
+│
+├── library_manager.py
+├── books.json
+├── README.md
+├── requirements.txt
+└── .gitignore
